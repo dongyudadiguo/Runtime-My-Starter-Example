@@ -24,8 +24,6 @@ void load(void){
     
     if (ismousebuttonpressed(MOUSE_BUTTON_LEFT)) fun[active]();
 
-    DrawText(TextFormat("Active: %d, ScrollIndex: %d", active, scrollIndex), 10, 10, 20, WHITE);
-
     EndDrawing();
     ClearBackground(BLACK);
     BeginDrawing();
