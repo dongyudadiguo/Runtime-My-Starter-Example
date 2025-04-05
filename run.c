@@ -11,7 +11,7 @@ void (*imp)(), *bse, *crt, *std;
 void (*fun[])(void) = {...};
 int fun_size = sizeof(fun) / sizeof(fun[0]);
 
-const char *fun_names = "func1;func2...";
+const char *fun_names = "...";
 
 
 
