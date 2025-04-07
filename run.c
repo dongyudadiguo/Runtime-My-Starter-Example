@@ -26,6 +26,8 @@ void (*fun[])(void) = { test };
 size_t fun_size = sizeof(fun) / sizeof(fun[0]);  // 使用size_t类型
 char *str = "test\0";
 
+
+
 void load(void){
     
     static int scrollIndex = 0;
