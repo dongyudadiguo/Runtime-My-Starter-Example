@@ -23,7 +23,7 @@ void test(void){
 }
 
 void (*fun[])(void) = { test };
-size_t fun_size = sizeof(fun) / sizeof(fun[0]);  // 使用size_t类型
+size_t fun_size = sizeof(fun) / sizeof(fun[0]);
 char *str = "test\0";
 
 
