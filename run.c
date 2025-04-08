@@ -107,7 +107,7 @@ void load(void){
                         fun[currentIndex]();
                     }
                     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-                        (*(void(**)(void))std) = fun[currentIndex];
+                        (*(int*)std) = currentIndex;
                     }
                     DrawRectangleLinesEx(textRect, 1, YELLOW);
                 }
