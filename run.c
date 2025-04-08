@@ -18,14 +18,36 @@ void *std;
 
 
 
-void test(void){
-    printf("test\n"); 
+void get_imp(void){
+    (*(void(**)(void))std) = imp;
+}
+void get_bse(void){
+    (*(void**)std) = bse;
+}
+void get_crt(void){
+    (*(void**)std) = crt; 
+}
+void get_std(void){
+    (*(void**)std) = std; 
 }
 
-void (*fun[])(void) = { test };
-size_t fun_size = sizeof(fun) / sizeof(fun[0]);  // 使用size_t类型
-char *str = "test\0";
+void get_fun(void);
+void get_fun_size(void);
+void get_str(void);
 
+void (*fun[])(void) = { get_imp, get_bse, get_crt, get_std, get_fun, get_fun_size, get_str };
+size_t fun_size = sizeof(fun) / sizeof(fun[0]);  // 使用size_t类型
+char *str = "get_imp\0get_bse\0get_crt\0get_std\0get_funget_fun_size\0get_str\0";
+
+void get_fun(void){
+    (*(void**)std) = fun; 
+}
+void get_fun_size(void){
+    *(size_t*)std = fun_size;
+}
+void get_str(void){
+    (*(char**)std) = str; 
+}
 
 
 void load(void){
@@ -55,6 +77,10 @@ void load(void){
         searchText[strlen(searchText)-1] = '\0';
         scrollIndex = 0;
     }
+    if (IsKeyPressed(KEY_ENTER)) {
+        *(int*)std = atoi(searchText);
+        searchText[0] = '\0';
+    }
 
     char* current = str;
     int originalTotal = 0;
@@ -80,6 +106,9 @@ void load(void){
                     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                         fun[currentIndex]();
                     }
+                    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+                        (*(void(**)(void))std) = fun[currentIndex];
+                    }
                     DrawRectangleLinesEx(textRect, 1, YELLOW);
                 }
                 yPos += 20;
@@ -91,7 +120,7 @@ void load(void){
     }
 
 
-    int max_chars = 25;
+    int max_chars = 256;
     
     int currentX = 10;
     for (int i = 0; i < max_chars; i++) {
@@ -120,18 +149,13 @@ void load(void){
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
                 int newStart = i - relative;
                 int newEnd = newStart + fixed_size;
-                if (newEnd < max_chars && newStart >= 0) {
-                    selected_start = newStart;
-                    selected_end = newEnd;
-                }
+                selected_start = newStart;
+                selected_end = newEnd;
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-                if (selected_start >= 0 && selected_end < max_chars && 
-                    fixed_start >= 0 && (fixed_start + fixed_size) < max_chars) {
-                    memmove((char*)std + fixed_start, 
-                           (char*)std + selected_start, 
-                           selected_end - selected_start + 1);
-                }
+                memmove((char*)std + selected_start, 
+                        (char*)std + fixed_start, 
+                           fixed_size + 1);
                 selected_start = selected_end = fixed_start = fixed_size = -1;
             }
         }
@@ -151,7 +175,7 @@ int main(){
     
     InitWindow(800, 600, "run.c");
     std = malloc(256);
-    strcpy((char*)std, "1234567890\0");
+    strcpy((char*)std, "In the list. Left click to execute,Right-click to select,Type to match,Enter atoi to std.. On top.Drag the selection to move.. \0");
     
     while (1) imp();
 }
