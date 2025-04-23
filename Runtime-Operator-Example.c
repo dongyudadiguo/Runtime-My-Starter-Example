@@ -33,6 +33,8 @@ void starter(void)
     char *tmp = buffer + type_location;
     if (IsKeyPressed(KEY_BACKSPACE)) {
         *(tmp) = '\0';
+    }else if (IsKeyPressed(KEY_ENTER)) {
+        *(int*)tmp = atoi(tmp);
     }else{
         int key = GetCharPressed();
         while (key > 0)
@@ -42,7 +44,7 @@ void starter(void)
             key = GetCharPressed();
         }
     }
-    
+
     int currentX = 10;
     for (int i = 0; i < 256; i++)
     {
@@ -51,11 +53,11 @@ void starter(void)
 
         int xPos = currentX;
         currentX += textWidth;
-
-        if (i == type_location) DrawRectangle(xPos, 10, textWidth, 20, GREEN);
         
         bool isSelected = (i >= selected_start && i <= selected_end && selected_start >= 0);
-        DrawText(TextFormat("%c", currentChar), xPos, 10, 20, isSelected ? WHITE : GRAY); // 字体大小20
+        if (i == type_location) DrawRectangle(xPos, 10, textWidth, 20, GREEN);
+        if (isSelected && textWidth == 2) DrawRectangle(xPos, 10, textWidth, 20, PURPLE);
+        DrawText(TextFormat("%c", currentChar), xPos, 10, 20, isSelected ? WHITE : GRAY); // 字体大小20    
 
         Rectangle charRect = {xPos, 10, textWidth, 20};
         if (CheckCollisionPointRec(GetMousePosition(), charRect)) {
@@ -75,7 +77,7 @@ void starter(void)
                 if (isSelecting) {
                     selected_end = i; 
                 }else {
-                    selected_start = i - relative;
+                    if ((selected_start = i - relative) < 0) selected_start = 0;
                     selected_end = selected_start + fixed_size;
                 }
             }
