@@ -2,25 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Runtime-lib-raylib-statement.h"
-
-void starter(void);
+void Operator(void);
 
 int stack[1024];
 int stackPtr = 0;
 
 void *buffer;
 int ptr;
-void (*fun[])(void) = {starter, InitWindow__, CloseWindow__};
+void (*fun[])(void) = {Operator};
 void (*imp)(); 
 
-void exit__(void){
-    imp = fun[*(int*)(buffer + (ptr = stack[--stackPtr] + sizeof(int)))];
-}
-
-#include "Runtime-lib-raylib.h"
-
-void starter(void)
+void Operator(void)
 {
     static int selected_start = -1;
     static int selected_end = -1;
@@ -103,7 +95,7 @@ void starter(void)
 }
 
 int main(){
-    InitWindow(800, 450, "Runtime-Starter-Example");
+    InitWindow(800, 450, "Runtime-Operator-Example");
     imp = fun[ptr = (*(int*)(buffer = malloc(sizeof(void *)*256)) = 0)];
     while (1){ imp();}
 }
