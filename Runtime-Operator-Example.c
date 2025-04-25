@@ -21,6 +21,7 @@ void Operator(void)
     static int relative = 0;
     static int type_location = 0;
     static bool isSelecting = true;
+    static bool isMouseMove = false;
 
     char *tmp = buffer + type_location;
     if (IsKeyPressed(KEY_BACKSPACE)) {
@@ -51,10 +52,12 @@ void Operator(void)
         if (isSelected && textWidth == 2) DrawRectangle(xPos, 10, textWidth, 20, PURPLE);
         DrawText(TextFormat("%c", currentChar), xPos, 10, 20, isSelected ? WHITE : GRAY); // 字体大小20    
 
-        Rectangle charRect = {xPos, 10, textWidth, 20};
+        Rectangle charRect = {xPos, isMouseMove?0:10, textWidth,isMouseMove?256:20};
         if (CheckCollisionPointRec(GetMousePosition(), charRect)) {
             if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
                 type_location = i;
+                DrawText(TextFormat("%d", type_location), xPos, 35, 20, WHITE);
+                isMouseMove = true;
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 if (isSelecting) {
@@ -64,34 +67,41 @@ void Operator(void)
                     fixed_size = selected_end - selected_start;
                     relative = i - selected_start;
                 }
+                isMouseMove = true;
             }
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
                 if (isSelecting) {
-                    selected_end = i; 
+                    if (i < selected_start) {
+                        selected_end = selected_start;
+                        selected_start = i;
+                    } else {
+                        selected_end = i;
+                    }
                 }else {
                     if ((selected_start = i - relative) < 0) selected_start = 0;
                     selected_end = selected_start + fixed_size;
                 }
-            }
-            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-                if (isSelecting) {
-                    isSelecting = false;
-                } else {
-                    memmove((char *)buffer + selected_start,
-                            (char *)buffer + fixed_start,
-                            fixed_size + 1);
-                    selected_start = selected_end = fixed_start = fixed_size = -1;
-                    isSelecting = true;
-                }
+                DrawText(TextFormat("%d %d", selected_start,selected_end), xPos, 35, 20, WHITE);
             }
         }
     }
-    
+    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+        if (isSelecting) {
+            isSelecting = false;
+        } else {
+            memmove((char *)buffer + selected_start,
+                    (char *)buffer + fixed_start,
+                    fixed_size + 1);
+            selected_start = selected_end = fixed_start = fixed_size = -1;
+            isSelecting = true;
+        }
+        isMouseMove = false;
+    }
     EndDrawing();
     BeginDrawing();
     ClearBackground(BLACK);
 
-    *(int*)(buffer + (ptr = 0));
+    imp = fun[*(int*)(buffer + (ptr = 0))];
 }
 
 int main(){
