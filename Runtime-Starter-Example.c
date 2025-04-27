@@ -17,7 +17,6 @@ void STK(void){
     imp = fun[*(int*)(buffer + (ptr = (relativePtr = ptr + *(int*)(buffer + ptr + sizeof(int)))))];
 }
 
-
 int main(int argc, char const *argv[]){
     FILE *file = fopen(argv[1], "rb");
     fseek(file, 0, SEEK_END);
