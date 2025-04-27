@@ -12,7 +12,7 @@ void (*imp)();
 
 void STK(void){
     stack[stackPtr++] = ptr;
-    imp = fun[*(int*)(buffer + (ptr = *(int*)(buffer + ptr + sizeof(int))))];
+    imp = fun[*(int*)(buffer + (ptr = ptr + *(int*)(buffer + ptr + sizeof(int))))];
 }
 
 int main(int argc, char const *argv[]){
