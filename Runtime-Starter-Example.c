@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void starter(void);
-
-int stack[1024];
+int stack[];
 int stackPtr = 0;
+void STK(void){
+    stack[stackPtr++] = ptr;
+    imp = fun[*(int*)(buffer + (ptr = *(int*)(buffer + ptr + sizeof(int))))];
+}
 
 void *buffer;
 int ptr;
-void (*fun[])(void) = {};
+void (*fun[])(void) = {STK};
 void (*imp)(); 
 
 int main(int argc, char const *argv[]){
